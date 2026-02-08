@@ -1,0 +1,43 @@
+{% if job.status == "processing" %}
+<div
+  id="status-{{ job_id }}"
+  hx-get="/status/{{ job_id }}"
+  hx-trigger="every 2s"
+  hx-swap="outerHTML"
+  class="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-lg p-4"
+>
+  <span class="spinner text-blue-600 text-lg">&#9696;</span>
+  <div>
+    <p class="text-sm font-medium text-blue-800">Processing: {{ job.filename }}</p>
+    <div class="w-48 bg-blue-200 rounded-full h-2 mt-1">
+      <div class="bg-blue-600 h-2 rounded-full transition-all" style="width: {{ job.progress }}%"></div>
+    </div>
+    <p class="text-xs text-blue-600 mt-1">{{ job.progress }}% complete</p>
+  </div>
+</div>
+
+{% elif job.status == "completed" %}
+<div
+  id="status-{{ job_id }}"
+  class="flex items-center gap-3 bg-green-50 border border-green-200 rounded-lg p-4"
+>
+  <svg class="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+  </svg>
+  <p class="text-sm font-medium text-green-800">{{ job.filename }} indexed successfully!</p>
+</div>
+
+{% elif job.status == "error" %}
+<div
+  id="status-{{ job_id }}"
+  class="flex items-center gap-3 bg-red-50 border border-red-200 rounded-lg p-4"
+>
+  <svg class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+  </svg>
+  <div>
+    <p class="text-sm font-medium text-red-800">Failed: {{ job.filename }}</p>
+    <p class="text-xs text-red-600 mt-1">{{ job.error }}</p>
+  </div>
+</div>
+{% endif %}
